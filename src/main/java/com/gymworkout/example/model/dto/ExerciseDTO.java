@@ -1,7 +1,5 @@
 package com.gymworkout.example.model.dto;
 
-import com.gymworkout.example.model.Name;
-
 import java.util.Calendar;
 
 /**
@@ -10,25 +8,27 @@ import java.util.Calendar;
  */
 public class ExerciseDTO {
     private String name;
-    private int serie;
+    private int series;
     private int reps;
     private int weight;
     private Calendar date;
+
+    public ExerciseDTO() {}
 
     public String getName() {
         return name;
     }
 
-    public void setName(Name name) {
-        this.name = name.getName();
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public int getSerie() {
-        return serie;
+    public int getSeries() {
+        return series;
     }
 
-    public void setSerie(int serie) {
-        this.serie = serie;
+    public void setSeries(int series) {
+        this.series = series;
     }
 
     public int getReps() {
@@ -53,5 +53,17 @@ public class ExerciseDTO {
 
     public void setDate(Calendar date) {
         this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("ExerciseDTO{");
+        sb.append("name='").append(name).append('\'');
+        sb.append(", series=").append(series);
+        sb.append(", reps=").append(reps);
+        sb.append(", weight=").append(weight);
+        sb.append(", date=").append(date);
+        sb.append('}');
+        return sb.toString();
     }
 }

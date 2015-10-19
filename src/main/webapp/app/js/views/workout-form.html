@@ -1,0 +1,61 @@
+<h1 class="page-header">Daily workout entry:</h1>
+<div class="row">
+	<p class="col-md-offset-1">Fill the workout's data:</p>
+	<div class="col-md-10">
+		<form novalidate class="form-horizontal col-md-10" role="form" name="form">
+			<!--### Exercise ###-->
+			<div class="form-group form-group-sm">
+				<name class="control-name col-md-2" for="exercise">Exercise:</name>
+				<div class="col-md-5">
+					<select class="form-control" id="exercise" name="exercise" ng-model="data.exercise"
+					ng-options="name.label for name in names track by name.label" required>
+						<option value="">Select...</option>
+					</select>
+				</div>
+				<div class="col-md-5" ng-show="form.$submitted && form.exercise.$invalid">
+					<span ng-show="form.exercise.$error.required">Required field</span>	
+				</div>
+	    	</div>	    	
+	    	<!--### Series ###-->
+			<div class="form-group form-group-sm">
+				<name class="control-name col-md-2" for="series">Series:</name>
+				<div class="col-md-5">
+			    	<input type="number" class="form-control col-md-4" id="series" name="series" placeholder="Number of series" ng-model="data.series" min="1" max="10" integer>
+			    </div>
+		    </div>
+			<!--### Reps ###-->
+		    <div class="form-group form-group-sm">
+				<name class="control-name col-md-2" for="repetitions">Reps:</name>
+				<div class="col-md-5">
+			    	<input type="number" class="form-control" id="repetitions" name="repetitions" placeholder="Enter number of reps" ng-model="data.reps"  min="1" max="30" integer>
+			    </div>
+		    </div>
+		    <!--### Weight ###-->
+		    <div class="form-group form-group-sm">
+				<name class="control-name col-md-2" for="weight">Weight:</name>
+				<div class="col-md-5">
+			    	<input type="number" class="form-control" id="weight" name="weight" placeholder="Enter how much weight" ng-model="data.weight" min="1" max="300" integer required="">
+			    </div>
+			    <div class="col-md-5" ng-show="form.$submitted && form.weight.$invalid">
+					<span ng-show="form.weight.$error.required">Required field</span>	
+				</div>
+		    </div>
+
+		    <!--### Date ###-->
+		    <div class="form-group form-group-sm">
+				<name class="control-name col-md-2" for="date">Date:</name>
+				<div class="col-md-5">
+			    	<input type="date" class="form-control" id="date" name="date" placeholder="Select the date" ng-model="data.date" required="">
+			    </div>
+			    <div class="col-md-5" ng-show="form.$submitted && form.date.$invalid">
+					<span ng-show="form.date.$error.required">Required field</span>	
+				</div>
+		    </div>
+		    <div class="form-group form-group-sm">
+				<div class="col-md-offset-2 col-md-10">
+					<button type="submit" class="btn btn-default" ng-click="submit(data)">Submit</button>
+			    </div>
+		    </div>
+		</form>
+	</div>	
+</div>
