@@ -1,29 +1,40 @@
 package com.gymworkout.example.model;
 
-import java.util.Calendar;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author pfranca
  * Created by pfranca on 9/11/2015.
  */
+@Document(collection = "exercises")
 public final class Exercise {
-    private final String name;
+    @Id
+    private String id;
+    private String name;
     private int serie;
     private int reps;
-    private final int weight;
-    private final Calendar date;
+    private int weight;
+    private long date;
 
-    private Exercise(final Name name, final int weight, final Calendar date) {
+    //This constructor is only used by mongodb
+    public Exercise() {}
+
+    private Exercise(final Name name, final int weight, final long date) {
         this.name = name.getName();
         if (weight == 0) {
             throw new IllegalStateException("Weight cannot be zero.");
         }
         this.weight = weight;
 
-        if (date == null) {
+        if (date == 0l) {
             throw new IllegalStateException("Date cannot be null.");
         }
         this.date = date;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() { return name; }
@@ -40,18 +51,18 @@ public final class Exercise {
         return weight;
     }
 
-    public Calendar getDate() {
-        return (Calendar) date.clone();
+    public long getDate() {
+        return date;
     }
 
-    public static Builder getBuilder(Name name, int weight, Calendar date){
+    public static Builder getBuilder(Name name, int weight, long date){
         return new Builder(name, weight, date);
     }
 
     public static class Builder {
         private Exercise built;
 
-        public Builder(Name name, int weight, Calendar date) {
+        public Builder(Name name, int weight, long date) {
             this.built = new Exercise(name, weight, date);
         }
 
@@ -80,29 +91,33 @@ public final class Exercise {
         if (serie != exercise.serie) return false;
         if (reps != exercise.reps) return false;
         if (weight != exercise.weight) return false;
-        if (name != null ? !name.equals(exercise.name) : exercise.name != null) return false;
-        return !(date != null ? !date.equals(exercise.date) : exercise.date != null);
+        if (date != exercise.date) return false;
+        if (id != null ? !id.equals(exercise.id) : exercise.id != null) return false;
+        return name.equals(exercise.name);
 
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + name.hashCode();
         result = 31 * result + serie;
         result = 31 * result + reps;
         result = 31 * result + weight;
-        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (int) (date ^ (date >>> 32));
         return result;
     }
 
     @Override
     public String toString() {
-        return "Exercise{" +
-                "name='" + name + '\'' +
-                ", serie=" + serie +
-                ", reps=" + reps +
-                ", weight=" + weight +
-                ", date=" + date +
-                '}';
+        final StringBuilder sb = new StringBuilder("Exercise{");
+        sb.append("id='").append(id).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", serie=").append(serie);
+        sb.append(", reps=").append(reps);
+        sb.append(", weight=").append(weight);
+        sb.append(", date=").append(date);
+        sb.append('}');
+        return sb.toString();
     }
 }

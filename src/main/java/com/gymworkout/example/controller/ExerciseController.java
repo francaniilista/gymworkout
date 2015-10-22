@@ -3,8 +3,10 @@ package com.gymworkout.example.controller;
 import com.gymworkout.example.model.Exercise;
 import com.gymworkout.example.model.Name;
 import com.gymworkout.example.model.dto.ExerciseDTO;
+import com.gymworkout.example.service.ExerciseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -21,24 +23,29 @@ import java.util.List;
 public class ExerciseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExerciseController.class);
 
+    @Autowired
+    private ExerciseService service;
+
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public List<ExerciseDTO> findAll() {
-        return Arrays.asList(getSampleExercise(),getSampleExercise(),getSampleExercise());
+    public List<Exercise> findAll() {
+        return service.get();
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET)
     @ResponseBody
-    public ExerciseDTO get(@PathVariable("id") final String id){
+    public Exercise get(@PathVariable("id") final String id){
         return null;
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
-    public ExerciseDTO create(@RequestBody ExerciseDTO exercise) {
-        System.out.println(exercise);
-        return exercise;
+    public Exercise create(@RequestBody ExerciseDTO dto) {
+        LOGGER.debug("Adding new exercise with information: {}", dto);
+        Exercise added = service.add(dto);
+        LOGGER.debug("Added exercise with information: {}", added);
+        return added;
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.PUT)
@@ -47,15 +54,14 @@ public class ExerciseController {
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void remove(@PathVariable String id) {}
+    public void remove(@PathVariable String id) {
+        System.out.println("deleted");
+    }
 
-    private ExerciseDTO getSampleExercise() {
-        ExerciseDTO exercise = new ExerciseDTO();
-        exercise.setDate(Calendar.getInstance());
-        exercise.setName("Barbel");
-        exercise.setReps(1);
-        exercise.setSeries(1);
-        exercise.setWeight(120);
-        return exercise;
+    private Exercise getSampleExercise() {
+        return Exercise.getBuilder(Name.BARBELL, 100,Calendar.getInstance().getTimeInMillis())
+                .reps(10)
+                .serie(2)
+                .build();
     }
 }

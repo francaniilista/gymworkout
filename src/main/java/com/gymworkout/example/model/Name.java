@@ -32,6 +32,15 @@ public enum Name {
         return name;
     }
 
+    public static Name getByName(String nameParameter) {
+        for (Name name : values()) {
+            if (name.getName().equalsIgnoreCase(nameParameter)) {
+                return name;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         try {
