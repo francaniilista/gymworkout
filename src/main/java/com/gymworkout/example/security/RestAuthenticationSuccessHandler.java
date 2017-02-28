@@ -1,4 +1,10 @@
-package com.gymworkout.security;
+package com.gymworkout.example.security;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -6,21 +12,19 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 /**
- * Created by pfranca on 10/20/2015.
+ * This will call once the request is authenticated. If it is not, the request
+ * will be redirected to authenticate entry point
+ *
+ * @author malalanayake
+ *
  */
-public class RequestAwareAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-
+public class RestAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private RequestCache requestCache = new HttpSessionRequestCache();
 
     @Override
-    public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) throws ServletException, IOException {
+    public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response,
+                                        final Authentication authentication) throws ServletException, IOException {
         final SavedRequest savedRequest = requestCache.getRequest(request, response);
 
         if (savedRequest == null) {
@@ -28,7 +32,8 @@ public class RequestAwareAuthenticationSuccessHandler extends SimpleUrlAuthentic
             return;
         }
         final String targetUrlParameter = getTargetUrlParameter();
-        if (isAlwaysUseDefaultTargetUrl() || (targetUrlParameter != null && StringUtils.hasText(request.getParameter(targetUrlParameter)))) {
+        if (isAlwaysUseDefaultTargetUrl() ||
+                (targetUrlParameter != null && StringUtils.hasText(request .getParameter(targetUrlParameter)))) {
             requestCache.removeRequest(request, response);
             clearAuthenticationAttributes(request);
             return;
@@ -46,4 +51,3 @@ public class RequestAwareAuthenticationSuccessHandler extends SimpleUrlAuthentic
         this.requestCache = requestCache;
     }
 }
-

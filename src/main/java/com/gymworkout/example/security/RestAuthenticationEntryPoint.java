@@ -1,4 +1,4 @@
-package com.gymworkout.security;
+package com.gymworkout.example.security;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * The Entry Point will not redirect to any sort of Login - it will return the 401
  */
-@Component
+@Component("restAuthenticationEntryPoint")
 public final class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(final HttpServletRequest request, final HttpServletResponse response,

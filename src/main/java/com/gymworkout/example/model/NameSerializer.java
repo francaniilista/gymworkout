@@ -15,9 +15,7 @@ public class NameSerializer extends JsonSerializer<Name> {
     @Override
     public void serialize(Name name, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
         jsonGenerator.writeStartObject();
-        jsonGenerator.writeFieldName("option");
-        jsonGenerator.writeNumber(name.getOption());
-        jsonGenerator.writeFieldName("label");
+        jsonGenerator.writeFieldName("name");
         jsonGenerator.writeString(name.getName());
         jsonGenerator.writeEndObject();
     }

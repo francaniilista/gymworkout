@@ -4,28 +4,24 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by pfranca on 9/11/2015.
  */
-@JsonSerialize(using = NameSerializer.class)
+//@JsonSerialize(using = NameSerializer.class)
 public enum Name {
-    BARBELL(1, "Barbell"),
-    BENCHPRESS(2, "Bench press"),
-    DEADLIFT(3, "Deadlift"),
-    DUMBELL_PRESSES(4, "Dumbell presses"),
-    SQUAT(5, "Squat");
+    BARBELL("Barbell"),
+    BENCHPRESS("Bench press"),
+    DEADLIFT("Deadlift"),
+    DUMBELL_PRESSES("Dumbell presses"),
+    SQUAT("Squat");
 
-    private final int option;
     private final String name;
 
-    Name(int option, String name) {
-        this.option = option;
+    Name(String name) {
         this.name = name;
-    }
-
-    public int getOption() {
-        return option;
     }
 
     public String getName() {
@@ -39,6 +35,14 @@ public enum Name {
             }
         }
         return null;
+    }
+
+    public static List<String> getNames() {
+        List<String> names = new ArrayList<String>();
+        for (Name name : values()) {
+            names.add(name.getName());
+        }
+        return names;
     }
 
     @Override

@@ -1,7 +1,10 @@
 package com.gymworkout.example.model;
 
+import com.gymworkout.example.util.CalendarUtil;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Calendar;
 
 /**
  * @author pfranca
@@ -12,7 +15,7 @@ public final class Exercise {
     @Id
     private String id;
     private String name;
-    private int serie;
+    private int series;
     private int reps;
     private int weight;
     private long date;
@@ -27,7 +30,7 @@ public final class Exercise {
         }
         this.weight = weight;
 
-        if (date == 0l) {
+        if (date == 0L) {
             throw new IllegalStateException("Date cannot be null.");
         }
         this.date = date;
@@ -39,8 +42,8 @@ public final class Exercise {
 
     public String getName() { return name; }
 
-    public int getSerie() {
-        return serie;
+    public int getSeries() {
+        return series;
     }
 
     public int getReps() {
@@ -55,6 +58,22 @@ public final class Exercise {
         return date;
     }
 
+    public void update(String name, int series, int reps, int weight, long date) {
+        this.name = name;
+        this.series = series;
+        this.reps = reps;
+
+        if (weight == 0) {
+            throw new IllegalStateException("Weight cannot be zero.");
+        }
+        this.weight = weight;
+
+        if (date == 0L) {
+            throw new IllegalStateException("Date cannot be null.");
+        }
+        this.date = date;
+    }
+
     public static Builder getBuilder(Name name, int weight, long date){
         return new Builder(name, weight, date);
     }
@@ -66,8 +85,13 @@ public final class Exercise {
             this.built = new Exercise(name, weight, date);
         }
 
-        public Builder serie(int serie) {
-            this.built.serie = serie;
+        public Builder id(String id) {
+            this.built.id = id;
+            return this;
+        }
+
+        public Builder series(int series) {
+            this.built.series = series;
             return this;
         }
 
@@ -88,7 +112,7 @@ public final class Exercise {
 
         Exercise exercise = (Exercise) o;
 
-        if (serie != exercise.serie) return false;
+        if (series != exercise.series) return false;
         if (reps != exercise.reps) return false;
         if (weight != exercise.weight) return false;
         if (date != exercise.date) return false;
@@ -101,7 +125,7 @@ public final class Exercise {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + name.hashCode();
-        result = 31 * result + serie;
+        result = 31 * result + series;
         result = 31 * result + reps;
         result = 31 * result + weight;
         result = 31 * result + (int) (date ^ (date >>> 32));
@@ -110,14 +134,13 @@ public final class Exercise {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Exercise{");
-        sb.append("id='").append(id).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", serie=").append(serie);
-        sb.append(", reps=").append(reps);
-        sb.append(", weight=").append(weight);
-        sb.append(", date=").append(date);
-        sb.append('}');
-        return sb.toString();
+        return "Exercise{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", series=" + series +
+                ", reps=" + reps +
+                ", weight=" + weight +
+                ", date=" + CalendarUtil.getDefaultFormattedDate(date) +
+                '}';
     }
 }

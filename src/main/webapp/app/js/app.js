@@ -7,12 +7,13 @@ var gymworkoutApp = angular.module('gymworkoutApp', ['ngRoute', 'ngResource','ui
 gymworkoutApp.config(function($routeProvider) {
 	$routeProvider.
 		when('/', {
-			templateUrl: 'js/views/welcome.html',
-			controller: 'WelcomeCtrl'
+			templateUrl: 'js/views/welcome.html'
+		}).
+		when('/trainingPlan', {
+			templateUrl: 'js/views/training-plan-form.html'
 		}).
 		when('/dworkout', {
-			templateUrl: 'js/views/workout-form.html',
-			controller: 'WorkoutFormCtrl'
+			templateUrl: 'js/views/workout-form.html'
 		}).
 		otherwise({
 			redirectTo: '/'

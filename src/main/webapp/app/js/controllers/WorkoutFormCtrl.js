@@ -7,8 +7,12 @@ gymworkoutControllers
     .constant("nameURL", "../api/name/")
     .constant("exerciseUrl", "../api/exercise/")
     .controller("WorkoutFormCtrl", function ($scope, $http, $resource, exerciseUrl, nameURL) {
+        $scope.msg = "Daily workout entry:";
         $scope.names = {};
-        $scope.exercisesResource = $resource(exerciseUrl + ":id", { id: "@id" });
+        $scope.exercisesResource = $resource(exerciseUrl + ":id", { id: "@id" },{
+            "update" : {method: "PUT"}
+        });
+
         $scope.listExercises = function () {
             $scope.exercises = $scope.exercisesResource.query();
         }
@@ -19,34 +23,32 @@ gymworkoutControllers
             });
         }
 
-        $scope.createExercise = function (exercise) {
-            new $scope.exercisesResource(exercise).$save().then(function (newExercise) {
-                $scope.exercises.push(newExercise);
-                $scope.editedExercise = null;
+        $scope.updateExercise = function (exercise) {
+            exercise.$update({id:exercise.id}).then(function (newExercise) {
+               $scope.formExercise = null;
+               $scope.reset();
+            }, function(error) {
+                console.log(error);
             });
         }
 
-        $scope.updateExercise = function (exercise) {
-            exercise.$save();
-            $scope.editedExercise = null;
-        }
-
         $scope.startEdit = function (exercise) {
-            $scope.editedExercise = exercise;
+            $scope.formExercise = exercise;
+            $scope.formExercise.date = new Date(exercise.date);
         }
 
         $scope.cancelEdit = function () {
-            $scope.editedExercise = null;
+            $scope.formExercise = null;
         }
 
         $scope.submit = function (formWorkout) {
             var workout = null;
             if (angular.isDefined(formWorkout) &&
-                angular.isDefined(formWorkout.exercise) &&
+                angular.isDefined(formWorkout.name) &&
                 angular.isDefined(formWorkout.weight) &&
                 angular.isDefined(formWorkout.date)) {
                 workout = {
-                    name : formWorkout.exercise.label,
+                    name : formWorkout.name,
                     series : formWorkout.series,
                     reps : formWorkout.reps,
                     weight : formWorkout.weight,
@@ -55,28 +57,20 @@ gymworkoutControllers
             }
 
             if ($scope.form.$valid) {
-                $http.post('../api/exercise/', workout)
-                    .success(function (data) {
-                        $scope.exercises.push(data)
-                        $scope.reset();
-                        console.log(angular.toJson(data));
-                    })
-                    .error(function (error) {
-                        console.log(angular.toJson(error));
-                    });
+                new $scope.exercisesResource(workout).$save().then(function (newExercise) {
+                    $scope.exercises.push(newExercise);
+                    $scope.editedExercise = null;
+                    $scope.reset();
+                });
             }
         };
 
         $scope.reset = function () {
             $scope.form.$submitted = false;
-            $scope.data = {};
-            $scope.form.exercise.$dirty = !$scope.form.exercise.$dirty;
-            $scope.form.weight.$dirty = !$scope.form.weight.$dirty;
-            $scope.form.date.$dirty = !$scope.form.date.$dirty;
-
+            $scope.formExercise = {};
         }
 
-        $http.get('../api/name/').success(function (response) {
+        $http.get(nameURL).success(function (response) {
             $scope.names = response;
         });
 

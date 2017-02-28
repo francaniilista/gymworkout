@@ -7,7 +7,7 @@ var gymworkoutControllers = angular.module('gymworkoutApp');
 gymworkoutControllers
     .constant("activeClass", "active")
     .controller('WelcomeCtrl', function ($scope, activeClass) {
-
+    $scope.logged = true;
     var selectedOption = null;
     $scope.msg = '';
 
@@ -69,4 +69,8 @@ gymworkoutControllers
             }];
     };
 
+    if (selectedOption == null) {
+        selectedOption = 'overview';
+        $scope.getMenuOption('overview');
+    }
 });

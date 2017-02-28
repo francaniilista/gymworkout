@@ -3,6 +3,8 @@ package com.gymworkout.example.controller;
 import com.gymworkout.example.model.Name;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,11 +23,10 @@ public class NameController {
     private static final Logger LOGGER = LoggerFactory.getLogger(NameController.class);
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/json")
-    @ResponseBody
-    public final List<Name> get() {
-        LOGGER.debug("Getting all names");
-        List<Name> found = Arrays.asList(Name.values());
-        LOGGER.debug("Found names");
-        return found;
+    public final ResponseEntity<Iterable<String>> get() {
+        LOGGER.info("Getting all exercise names");
+        Iterable<String> found = Name.getNames();
+        LOGGER.info("Found names with information: {}", found);
+        return new ResponseEntity<Iterable<String>>(found, HttpStatus.OK);
     }
 }
